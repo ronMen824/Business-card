@@ -5,7 +5,9 @@ Assignment 1, Web Application Development course.
 A responsive digital business card with a Batman / Wayne Enterprises dual theme,
 built with **HTML and CSS only**. There is no JavaScript in this project.
 
-**Live site:** [https://ronmen824.github.io/Business-card/]
+**Live site:** <https://ronmen824.github.io/Business-card/>
+
+**Repository:** <https://github.com/ronMen824/Business-card>
 
 ## Running it
 
