@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ron Igal Menuhin — Full-Stack Developer</title>
+  <meta name="description" content="Digital business card for Ron Igal Menuhin, full-stack developer and computer science student. Projects, skills and contact details.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Theme state. The only "logic" on this page: a checkbox the CSS reads. -->
+  <input type="checkbox" id="theme-toggle" class="theme-state" checked>
+
+  <label class="switch" for="theme-toggle">
+    <span class="switch__track">
+      <span class="switch__knob">
+        <svg class="switch__icon switch__icon--bat icon icon--solid icon--bat" viewBox="0 0 200 90" aria-hidden="true"><use href="#i-bat"></use></svg>
+        <svg class="switch__icon switch__icon--w icon icon--solid" viewBox="0 0 34 32" aria-hidden="true"><use href="#i-w"></use></svg>
+      </span>
+    </span>
+    <span class="switch__caption" aria-hidden="true">
+      <span class="switch__caption-dark">Batman</span>
+      <span class="switch__caption-light">Wayne Ent.</span>
+    </span>
+    <span class="sr-only">Switch between the Batman dark theme and the Wayne Enterprises light theme</span>
+  </label>
+
+  <!-- Icon sprite. Geometry only: every colour, size and stroke lives in styles.css. -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-bat" viewBox="0 0 200 90">
+      <path d="M4 30 Q30 17 62 22 Q78 25 84 34 L88 6 Q94 14 100 22 Q106 14 112 6 L116 34 Q122 25 138 22 Q170 17 196 30 Q184 34 172 58 Q166 46 156 44 Q146 50 136 66 Q128 56 120 50 Q110 60 100 78 Q90 60 80 50 Q72 56 64 66 Q54 50 44 44 Q34 46 28 58 Q16 34 4 30 Z"/>
+    </symbol>
+    <symbol id="i-w" viewBox="0 0 34 32">
+      <path d="M1 4h6.2l3.1 14.2L13.9 4h6.2l3.6 14.2L26.8 4H33l-6.1 24h-6.6L17 14.6 13.7 28H7.1L1 4z"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+      <path d="M22 6 12 13 2 6"/>
+    </symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+    </symbol>
+    <symbol id="i-linkedin" viewBox="0 0 24 24">
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+      <path d="M2 9h4v12H2z"/>
+      <path d="M4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+    </symbol>
+    <symbol id="i-github" viewBox="0 0 24 24">
+      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M7 17 17 7"/>
+      <path d="M9 7h8v8"/>
+    </symbol>
+  </svg>
+
+  <div class="page">
+    <div class="shell">
+      <div class="shell__body">
+
+      <!-- ============ IDENTITY RAIL ============ -->
+      <header class="rail">
+        <div class="rail__inner">
+
+          <div class="portrait">
+            <span class="portrait__glow" aria-hidden="true"></span>
+            <span class="portrait__ring" aria-hidden="true"></span>
+            <img class="portrait__img portrait__img--bat" src="assets/batman-pfp.jpeg"
+                 alt="Ron Igal Menuhin in Batman armour, standing in a rain-soaked Gotham alley"
+                 width="431" height="607">
+            <img class="portrait__img portrait__img--wayne" src="assets/wayne-pfp.jpeg"
+                 alt="Ron Igal Menuhin in a three-piece suit in the Wayne Enterprises study"
+                 width="864" height="1217">
+          </div>
+
+          <div class="rail__identity">
+
+          <h1 class="rail__name">Ron Igal<span class="rail__name-break"> </span>Menuhin</h1>
+          <p class="rail__role">Full-Stack Developer &amp; Computer Science Student</p>
+
+          <address class="contact">
+            <a class="contact__link" href="mailto:batmen824@gotham.com">
+              <svg class="icon icon--line" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"></use></svg>
+              <span class="contact__text">batmen824@gotham.com</span>
+            </a>
+            <a class="contact__link" href="tel:0501234567">
+              <svg class="icon icon--line" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-phone"></use></svg>
+              <span class="contact__text">050-123-4567</span>
+            </a>
+            <a class="contact__link" href="https://www.linkedin.com/in/ron-menuhin-b5524b374?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_ios"
+               target="_blank" rel="noopener noreferrer">
+              <svg class="icon icon--line" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-linkedin"></use></svg>
+              <span class="contact__text">LinkedIn</span>
+              <svg class="icon icon--line contact__out" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"></use></svg>
+            </a>
+            <a class="contact__link" href="https://github.com/ronMen824" target="_blank" rel="noopener noreferrer">
+              <svg class="icon icon--line" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"></use></svg>
+              <span class="contact__text">github.com/ronMen824</span>
+              <svg class="icon icon--line contact__out" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"></use></svg>
+            </a>
+          </address>
+
+          </div>
+
+        </div>
+      </header>
+
+      <!-- ============ CONTENT ============ -->
+      <main class="content" id="main">
+
+        <section class="section" aria-labelledby="origin-title">
+          <p class="section__eyebrow">Dossier</p>
+          <h2 class="section__title" id="origin-title">Origin Story</h2>
+          <div class="prose">
+            <p>
+              By day, a Computer Science student approaching his third year at the
+              College of Management in Rishon LeZion. By night, a full-stack developer
+              who would rather spend the extra hour on the architecture than patch it
+              at 3&nbsp;a.m. — which is how I ended up caring about system security,
+              honest data models and APIs that hold when the city goes dark.
+            </p>
+            <p>
+              My utility belt runs on <strong>React</strong>, <strong>TypeScript</strong>,
+              <strong>Node.js</strong> and <strong>PostgreSQL</strong>, with detours into
+              mobile and robotics whenever a problem looks more interesting than comfortable.
+              The two operations below are where that training actually got field-tested.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="belt-title">
+          <p class="section__eyebrow">Equipment</p>
+          <h2 class="section__title" id="belt-title">The Utility Belt</h2>
+          <div class="belt">
+            <div class="belt__group">
+              <h3 class="belt__label">Front line</h3>
+              <ul class="chips">
+                <li class="chip">React</li>
+                <li class="chip">React&nbsp;Native</li>
+                <li class="chip">TypeScript</li>
+                <li class="chip">HTML&nbsp;&amp;&nbsp;CSS</li>
+              </ul>
+            </div>
+            <div class="belt__group">
+              <h3 class="belt__label">Back end</h3>
+              <ul class="chips">
+                <li class="chip">Node.js</li>
+                <li class="chip">PostgreSQL</li>
+                <li class="chip">Supabase</li>
+                <li class="chip">REST&nbsp;APIs</li>
+              </ul>
+            </div>
+            <div class="belt__group">
+              <h3 class="belt__label">Systems &amp; tooling</h3>
+              <ul class="chips">
+                <li class="chip">Python</li>
+                <li class="chip">ROS&nbsp;2</li>
+                <li class="chip">OSRM</li>
+                <li class="chip">Git</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="arsenal-title">
+          <p class="section__eyebrow">Field record</p>
+          <h2 class="section__title" id="arsenal-title">Tech Arsenal</h2>
+          <div class="missions">
+
+            <article class="mission mission--solo">
+              <div class="mission__head">
+                <p class="mission__tag">Operation 01</p>
+                <p class="clearance">
+                  <svg class="icon icon--solid icon--bat" viewBox="0 0 200 90" aria-hidden="true"><use href="#i-bat"></use></svg>
+                  Solo op
+                </p>
+              </div>
+              <h3 class="mission__name">
+                Deal <span class="mission__alt" lang="he" dir="rtl">דיל</span>
+              </h3>
+              <p class="mission__origin">Self-built platform — designed and shipped end to end in my own time.</p>
+              <p class="mission__brief">
+                A real-time vendor marketplace connecting event producers with the
+                suppliers who make the night happen.
+              </p>
+              <p class="mission__detail">
+                Producers post what an event needs; suppliers answer live. A real-time
+                layer keeps offers, availability and negotiation state in sync across
+                every device, pushing notifications the moment a bid lands — no
+                refreshing, no waiting in the dark.
+              </p>
+              <ul class="chips chips--sm">
+                <li class="chip">React&nbsp;Native</li>
+                <li class="chip">Expo</li>
+                <li class="chip">Supabase</li>
+                <li class="chip">PostgreSQL</li>
+                <li class="chip">Push&nbsp;notifications</li>
+              </ul>
+            </article>
+
+            <article class="mission mission--field">
+              <div class="mission__head">
+                <p class="mission__tag">Operation 02</p>
+                <p class="clearance">
+                  <svg class="icon icon--line" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"></use></svg>
+                  Field op
+                </p>
+              </div>
+              <h3 class="mission__name">
+                MANGO <span class="mission__alt">Global Planner</span>
+              </h3>
+              <p class="mission__origin">Built during my military service.</p>
+              <p class="mission__brief">
+                A tactical navigation and routing bridge for autonomous ground systems.
+              </p>
+              <p class="mission__detail">
+                A global planner that turns map-scale routing into waypoints a robot can
+                actually execute, bridging OSRM's road-network output into the ROS&nbsp;2
+                navigation stack so high-level routes survive contact with the ground.
+              </p>
+              <ul class="chips chips--sm">
+                <li class="chip">ROS&nbsp;2</li>
+                <li class="chip">Python</li>
+                <li class="chip">OSRM</li>
+                <li class="chip">Navigation</li>
+              </ul>
+            </article>
+
+          </div>
+        </section>
+
+      </main>
+
+      </div>
+
+      <footer class="footer">
+        <p class="footer__note">
+          <span class="footer__mark" aria-hidden="true">
+            <svg class="icon icon--solid icon--bat" viewBox="0 0 200 90"><use href="#i-bat"></use></svg>
+          </span>
+          <span class="footer__text">
+            The email address and phone number on this card are fictional — Gotham runs on
+            a need-to-know basis. The <strong>LinkedIn</strong> and <strong>GitHub</strong>
+            links are real.
+          </span>
+        </p>
+        <p class="footer__meta">
+          Built with HTML &amp; CSS only. No JavaScript was harmed in the making of this card.
+        </p>
+      </footer>
+
+    </div>
+  </div>
+
+</body>
+</html>

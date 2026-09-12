@@ -1,0 +1,1070 @@
+@charset "UTF-8";
+/* =============================================================================
+   Ron Igal Menuhin — Digital Business Card
+   Assignment 1, Web Application Development
+
+   HTML + CSS only. No JavaScript anywhere in this project.
+   The dark/light theme is driven by a single checkbox (#theme-toggle) that the
+   selectors below read with the general sibling combinator and :has().
+
+   CONTENTS
+     01  Reset
+     02  Design tokens — Wayne Enterprises (light) is the base set
+     03  Theme override — Batman (dark), applied when #theme-toggle is checked
+     04  Base elements & typography
+     05  Utilities — sr-only, skip link, sprite, icons
+     06  Theme switch
+     07  Layout shell
+     08  Identity rail — portrait, name, contact
+     09  Content sections — prose, utility belt, missions
+     10  Footer
+     11  Responsive breakpoints
+     12  Hover / motion / print guards
+============================================================================= */
+
+
+/* =============================================================================
+   01  RESET
+============================================================================= */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body,
+h1, h2, h3, p, ul, figure, address { margin: 0; padding: 0; }
+
+ul { list-style: none; }
+
+img { display: block; max-width: 100%; height: auto; }
+
+a { color: inherit; text-decoration: none; }
+
+address { font-style: normal; }
+
+
+/* =============================================================================
+   02  DESIGN TOKENS
+   The base set is the Wayne Enterprises (light) theme. Section 03 redefines the
+   same names for Batman (dark) — no colour is ever defined in only one theme.
+   Nothing below this block uses a raw number where a token exists.
+============================================================================= */
+
+:root {
+  /* --- Spacing scale (4px base) --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* --- Type scale (fluid) --- */
+  --fs-xs:      0.75rem;
+  --fs-sm:      0.8125rem;
+  --fs-base:    clamp(0.95rem, 0.91rem + 0.18vw, 1.0625rem);
+  --fs-md:      clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --fs-lg:      clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --fs-xl:      clamp(1.6rem, 1.35rem + 1.2vw, 2.25rem);
+  --fs-display: clamp(2.4rem, 1.5rem + 3.6vw, 4.25rem);
+
+  /* --- Font families --- */
+  --font-display: "Anton", "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* --- Radii --- */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* --- Borders --- */
+  --border-w: 1px;
+  --border-w-thick: 2px;
+
+  /* --- Motion --- */
+  --dur-fast: 0.18s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.5s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- Layout --- */
+  --shell-max: 1180px;
+  --rail-w: 320px;
+  --measure: 68ch;
+  /* Vertical room reserved so content clears the fixed theme switch. */
+  --switch-clear: 4.5rem;
+
+  /* --- Colour: Wayne Enterprises (light) --- */
+  --bg: #eef0f4;
+  --surface: #ffffff;
+  --surface-2: #e4e8ee;
+  --border: #d1d7e0;
+  --text: #11161d;
+  --muted: #5b6675;
+  --accent: #123a6b;
+  --accent-ink: #123a6b;
+  --accent-contrast: #ffffff;
+  --accent-2: #b08d3f;
+  --accent-2-ink: #7d6229;
+  --ring: rgba(18, 58, 107, 0.45);
+  --glow: rgba(18, 58, 107, 0.22);
+  --chip-bg: #e9edf3;
+  --texture: rgba(17, 22, 29, 0.028);
+  --glass: rgba(255, 255, 255, 0.72);
+
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  --shadow-2: 0 4px 10px rgba(16, 24, 40, 0.07), 0 12px 24px rgba(16, 24, 40, 0.07);
+  --shadow-3: 0 10px 24px rgba(16, 24, 40, 0.10), 0 24px 48px rgba(16, 24, 40, 0.10);
+
+  color-scheme: light;
+}
+
+
+/* =============================================================================
+   03  THEME OVERRIDE — BATMAN (DARK)
+   Two selectors on purpose:
+     · the sibling combinator drives .page and .switch in every browser;
+     · :has() additionally repaints the html/body canvas so overscroll and the
+       edges of the viewport match the theme.
+   The checkbox ships with the `checked` attribute, so the card LOADS dark.
+============================================================================= */
+
+#theme-toggle:checked ~ .page,
+#theme-toggle:checked ~ .switch,
+:root:has(#theme-toggle:checked) {
+  --bg: #08090b;
+  --surface: #111318;
+  --surface-2: #191c22;
+  --border: #2b2f37;
+  --text: #e9eaee;
+  --muted: #969dab;
+  --accent: #d4342a;
+  --accent-ink: #e8574a;
+  --accent-contrast: #ffffff;
+  --accent-2: #f2b705;
+  --accent-2-ink: #f2b705;
+  --ring: rgba(212, 52, 42, 0.65);
+  --glow: rgba(212, 52, 42, 0.30);
+  --chip-bg: #1c2027;
+  --texture: rgba(255, 255, 255, 0.022);
+  --glass: rgba(17, 19, 24, 0.72);
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.55), 0 14px 28px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 12px 28px rgba(0, 0, 0, 0.6), 0 28px 56px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
+
+
+/* =============================================================================
+   04  BASE ELEMENTS & TYPOGRAPHY
+============================================================================= */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.65;
+  background: var(--bg);
+  color: var(--text);
+  transition: background var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  transition: background var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+
+/* Fine scanline texture + vignette. Decorative, never intercepts a click. */
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      var(--texture) 0 1px,
+      transparent 1px 3px
+    );
+}
+
+.page > * { position: relative; z-index: 2; }
+
+strong { font-weight: 600; color: var(--text); }
+
+
+/* =============================================================================
+   05  UTILITIES
+============================================================================= */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+/* The checkbox stays focusable — clipped, never display:none. */
+.theme-state {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  opacity: 0;
+}
+
+/* Deliberately theme-independent: it is only ever visible while focused, and
+   these colours are legible against both palettes. */
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: #ffffff;
+  background: #d4342a;
+  border-radius: var(--radius-sm);
+  transform: translateY(-160%);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.skip-link:focus-visible { transform: translateY(0); }
+
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
+}
+
+.icon--line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon--solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* The bat emblem is a wide 200x90 glyph — a 1em square would crush it. */
+.icon--bat {
+  width: 2.22em;
+  height: 1em;
+}
+
+/* One focus treatment for everything that takes focus. */
+a:focus-visible,
+.theme-state:focus-visible + .switch .switch__track {
+  outline: var(--border-w-thick) solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.theme-state:focus-visible + .switch .switch__track {
+  border-radius: var(--radius-pill);
+}
+
+
+/* =============================================================================
+   06  THEME SWITCH
+   A <label> styled as a pill switch: the visible "button" the brief asks for.
+============================================================================= */
+
+.switch {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  min-height: 44px;
+  cursor: pointer;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--glass);
+  box-shadow: var(--shadow-2);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition: background var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease),
+              box-shadow var(--dur-base) var(--ease);
+}
+
+.switch__track {
+  position: relative;
+  display: block;
+  width: 68px;
+  height: 32px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  transition: background var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease);
+}
+
+.switch__knob {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 0 0 0 var(--glow), var(--shadow-1);
+  transform: translateY(-50%);
+  transition: transform var(--dur-base) var(--ease),
+              background var(--dur-base) var(--ease),
+              box-shadow var(--dur-base) var(--ease);
+}
+
+/* Dark theme: knob slides right and lights up like a bat-signal. */
+#theme-toggle:checked ~ .switch .switch__knob {
+  transform: translate(36px, -50%);
+  box-shadow: 0 0 16px 2px var(--glow), var(--shadow-1);
+}
+
+.switch__icon {
+  position: absolute;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.switch__icon--bat { width: 17px; height: 7.7px; opacity: 0; }
+.switch__icon--w   { width: 11px; height: 11px; opacity: 1; }
+
+#theme-toggle:checked ~ .switch .switch__icon--bat { opacity: 1; }
+#theme-toggle:checked ~ .switch .switch__icon--w   { opacity: 0; }
+
+.switch__caption {
+  padding-right: var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.switch__caption-dark { display: none; }
+.switch__caption-light { display: inline; }
+
+#theme-toggle:checked ~ .switch .switch__caption-dark { display: inline; }
+#theme-toggle:checked ~ .switch .switch__caption-light { display: none; }
+
+
+/* =============================================================================
+   07  LAYOUT SHELL
+============================================================================= */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  padding-block: var(--switch-clear) var(--space-6);
+}
+
+/* The rail and the content share this grid; the footer sits OUTSIDE it.
+   That matters: a sticky element's travel is bounded by its containing block,
+   so keeping the footer out of this box is what stops the sticky rail from
+   sliding over the footer at the bottom of the page. */
+.shell__body {
+  display: grid;
+  gap: var(--space-6);
+}
+
+
+/* =============================================================================
+   08  IDENTITY RAIL
+============================================================================= */
+
+.rail__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  transition: background var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease),
+              box-shadow var(--dur-base) var(--ease);
+}
+
+.rail__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+}
+
+/* --- Portrait: two images, one frame, cross-faded by the theme --- */
+
+.portrait {
+  position: relative;
+  width: 100%;
+  /* Capped on purpose: the Batman source is 431px wide, so a larger frame
+     would go soft on a high-density display. */
+  max-width: 220px;
+  aspect-ratio: 431 / 607;
+  border-radius: var(--radius-lg);
+}
+
+.portrait__glow {
+  position: absolute;
+  inset: -14%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 45%, var(--glow), transparent 62%);
+  opacity: 0.75;
+  filter: blur(14px);
+  transition: background var(--dur-base) var(--ease), opacity var(--dur-base) var(--ease);
+}
+
+.portrait__ring {
+  position: absolute;
+  inset: calc(var(--border-w-thick) * -1);
+  z-index: 1;
+  border-radius: calc(var(--radius-lg) + var(--border-w-thick));
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 52%,
+    var(--accent) 72%,
+    var(--accent-2) 84%,
+    transparent 96%
+  );
+  animation: ring-spin 7s linear infinite;
+}
+
+.portrait__img {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-slow) var(--ease),
+              visibility var(--dur-slow) var(--ease);
+}
+
+/* Light is the base state, so Bruce is visible by default... */
+.portrait__img--wayne { opacity: 1; visibility: visible; }
+
+/* ...and the checked (dark) state dissolves through to Batman. */
+#theme-toggle:checked ~ .page .portrait__img--wayne { opacity: 0; visibility: hidden; }
+#theme-toggle:checked ~ .page .portrait__img--bat   { opacity: 1; visibility: visible; }
+
+@keyframes ring-spin {
+  to { transform: rotate(1turn); }
+}
+
+/* --- Identity --- */
+
+.rail__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.rail__role {
+  max-width: 26ch;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --- Contact --- */
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.contact__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  border: var(--border-w) solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease),
+              transform var(--dur-fast) var(--ease);
+}
+
+.contact__link .icon { font-size: 1.05rem; color: var(--accent); transition: color var(--dur-fast) var(--ease); }
+
+.contact__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact__out {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+
+/* =============================================================================
+   09  CONTENT SECTIONS
+============================================================================= */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.section__eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.section__title {
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+/* Hairline under each section heading, fading out to the right. */
+.section__title::after {
+  content: "";
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: var(--border-w-thick);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+/* --- Prose --- */
+
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.prose p {
+  max-width: var(--measure);
+  font-size: var(--fs-md);
+  color: var(--muted);
+}
+
+/* --- Utility belt --- */
+
+.belt {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.belt__group {
+  padding: var(--space-5);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  transition: background var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease);
+}
+
+.belt__label {
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--chip-bg);
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+
+.chips--sm .chip { font-size: var(--fs-xs); }
+
+/* --- Missions --- */
+
+.missions {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.mission {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--dur-base) var(--ease),
+              box-shadow var(--dur-base) var(--ease),
+              border-color var(--dur-base) var(--ease),
+              background var(--dur-base) var(--ease);
+}
+
+/* Gradient sweep, parked off to one side until hover moves it across. */
+.mission::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 30%, var(--glow) 50%, transparent 70%);
+  background-size: 220% 100%;
+  background-position: 100% 0;
+  transition: opacity var(--dur-base) var(--ease),
+              background-position 0.9s var(--ease);
+}
+
+.mission > * { position: relative; z-index: 1; }
+
+/* Accent bar down the left edge. */
+.mission::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+  opacity: 0.85;
+}
+
+.mission__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.mission__tag {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+/* Clearance badge — what KIND of operation this was. The two missions are
+   deliberately different: one solo and off the clock, one in service. */
+.clearance {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: var(--border-w) solid currentColor;
+  border-radius: var(--radius-pill);
+  transition: color var(--dur-base) var(--ease);
+}
+
+.clearance .icon { font-size: 0.9rem; }
+
+.mission--solo .clearance { color: var(--accent-ink); }
+.mission--field .clearance { color: var(--accent-2-ink); }
+
+/* The edge bar picks up the same coding, so the two read apart at a glance. */
+.mission--solo::after { background: var(--accent); }
+.mission--field::after { background: var(--accent-2); }
+
+.mission__origin {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.mission__origin::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: var(--border-w-thick);
+  /* Sit on the FIRST line's optical centre, not the centre of a block that
+     may wrap to two lines. Half of the 1.65 line-height, less half the rule. */
+  margin-top: 0.75em;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.mission__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.mission__alt {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.mission__brief {
+  max-width: var(--measure);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.mission__detail {
+  max-width: var(--measure);
+  font-size: var(--fs-base);
+  color: var(--muted);
+}
+
+.mission .chips { margin-top: var(--space-2); }
+
+
+/* =============================================================================
+   10  FOOTER
+============================================================================= */
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-5);
+  border-top: var(--border-w) solid var(--border);
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+.footer__note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: var(--measure);
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.footer__text { min-width: 0; }
+
+.footer__mark {
+  display: block;
+  flex: none;
+  margin-top: 0.35em;
+  font-size: 0.8rem;
+  line-height: 0;
+  color: var(--accent);
+}
+
+.footer__meta {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+
+/* =============================================================================
+   11  RESPONSIVE
+   Type and spacing are fluid via clamp(), so these breakpoints only change
+   what the layout IS, not how big it is.
+============================================================================= */
+
+/* --- Roomier phones / small tablets --- */
+@media (min-width: 600px) {
+  .shell { padding-inline: var(--space-6); gap: var(--space-7); }
+  .shell__body { gap: var(--space-7); }
+
+  .rail__inner {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    text-align: left;
+  }
+
+  .rail__identity { align-items: flex-start; text-align: left; }
+  .portrait { flex: none; max-width: 180px; }
+  .rail__role { max-width: none; }
+
+  .belt { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --- Rail + content side by side --- */
+@media (min-width: 900px) {
+  .shell { padding-block: var(--switch-clear) var(--space-8); }
+
+  .shell__body {
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-7);
+  }
+
+  .rail { position: sticky; top: var(--space-6); }
+
+  .rail__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .rail__identity { align-items: center; text-align: center; }
+
+  .portrait { max-width: 200px; }
+
+  .belt { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .missions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --- Widescreen: more air, never longer lines --- */
+@media (min-width: 1400px) {
+  :root {
+    --shell-max: 1320px;
+    --rail-w: 360px;
+  }
+
+  .shell { gap: var(--space-8); }
+  .shell__body { gap: var(--space-8); }
+  .content { gap: var(--space-8); }
+  .portrait { max-width: 220px; }
+  .mission { padding: var(--space-6); }
+  .belt__group { padding: var(--space-5) var(--space-6); }
+}
+
+/* --- Landscape phone: short viewports must not be eaten by fixed furniture --- */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root { --switch-clear: 3.75rem; }
+
+  .shell { padding-block: var(--switch-clear) var(--space-6); }
+  .rail { position: static; }
+  .portrait { max-width: 130px; }
+
+  /* A 4rem name eats a 375px-tall screen — step it down a notch. */
+  .rail__name { font-size: var(--fs-xl); }
+
+  .switch { min-height: 36px; padding: var(--space-1) var(--space-2); }
+  .switch__track { width: 56px; height: 26px; }
+  .switch__knob { width: 20px; height: 20px; }
+  #theme-toggle:checked ~ .switch .switch__knob { transform: translate(29px, -50%); }
+  .switch__caption { display: none; }
+}
+
+
+/* =============================================================================
+   12  HOVER / MOTION / PRINT GUARDS
+============================================================================= */
+
+/* Hover effects only where a real pointer exists. Without this guard, a tap on
+   a touch screen leaves the hover state stuck on until you tap elsewhere. */
+@media (hover: hover) and (pointer: fine) {
+
+  .switch:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-3);
+  }
+
+  .switch:hover .switch__knob {
+    box-shadow: 0 0 18px 3px var(--glow), var(--shadow-1);
+  }
+
+  .contact__link:hover {
+    background: var(--surface);
+    border-color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  .contact__link:hover .contact__out { color: var(--accent); }
+
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .mission:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-3);
+  }
+
+  .mission:hover::before {
+    opacity: 1;
+    background-position: 0 0;
+  }
+}
+
+/* Respect a reduced-motion preference: keep every state change, drop the travel. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .portrait__ring { animation: none; }
+  .mission:hover { transform: none; }
+  .contact__link:hover { transform: none; }
+}
+
+/* A business card should survive being printed. Force the light palette,
+   drop the furniture, and spell out where every link actually goes. */
+@media print {
+  #theme-toggle:checked ~ .page,
+  #theme-toggle:checked ~ .switch,
+  :root:has(#theme-toggle:checked),
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f4f6f9;
+    --border: #c3cad4;
+    --text: #000000;
+    --muted: #333c48;
+    --accent: #123a6b;
+    --accent-ink: #123a6b;
+    --accent-2: #8a6d2f;
+    --accent-2-ink: #6b5423;
+    --chip-bg: #f4f6f9;
+    --glow: transparent;
+    --texture: transparent;
+    --shadow-1: none;
+    --shadow-2: none;
+    --shadow-3: none;
+  }
+
+  .switch,
+  .skip-link,
+  .page::before,
+  .portrait__glow,
+  .portrait__ring,
+  .contact__out,
+  .mission::before { display: none !important; }
+
+  #theme-toggle:checked ~ .page .portrait__img--bat { opacity: 0; visibility: hidden; }
+  #theme-toggle:checked ~ .page .portrait__img--wayne { opacity: 1; visibility: visible; }
+
+  .page { min-height: 0; }
+  .shell { max-width: none; padding: 0; gap: var(--space-5); }
+  .rail { position: static; }
+  .rail__inner,
+  .belt__group,
+  .mission { box-shadow: none; break-inside: avoid; }
+  .section { break-inside: avoid; }
+
+  /* Printed paper has no hyperlinks — write the destination out. */
+  .contact__link[href^="http"]::after { content: " (" attr(href) ")"; }
+  .contact__link[href^="mailto:"] .contact__text,
+  .contact__link[href^="tel:"] .contact__text { white-space: normal; }
+  .contact__link[href^="http"] {
+    font-size: var(--fs-xs);
+    word-break: break-all;
+    white-space: normal;
+  }
+  .contact__link[href^="http"] .contact__text { white-space: normal; }
+}
